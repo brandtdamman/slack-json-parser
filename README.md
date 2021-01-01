@@ -21,7 +21,7 @@ Slack JSON Parser can be used as the following:
 
 ### Installation
 
-The program can be compiled/installed by building the C program file `main.c` to `slackjp`.
+The program can be compiled/installed by building the C program file `src/main.c` to `slackjp`.
 
 ### Running
 
