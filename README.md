@@ -21,7 +21,13 @@ Slack JSON Parser can be used as the following:
 
 ### Installation
 
-The program can be compiled/installed by building the C program file `src/main.c` to `slackjp`.
+The program can be compiled/installed by building the C program file `src/slackjp.c` to `slackjp` (or desired executable name).  Below is a sample compilation command:
+
+```text
+gcc -pthread -o slackjp slackjp.c
+```
+
+For simplier compliation, a Makefile has been included root directory, which will also install the TROFF page.
 
 ### Running
 
@@ -30,6 +36,8 @@ Sample usage of Slack JSON Parser for downloading all attached files:
 ```text
 ./slackjp -d -R /path/to/root/dir
 ```
+
+Several switches and functionality is readable via the TROFF page included in the respository (`docs/slackjp.1`).
 
 ## License
 
