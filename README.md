@@ -16,7 +16,7 @@ This program should work with private messages, so long as they were exported.  
 
 Slack JSON Parser can be used as the following:
 
-- Download All Files in Messages
+- [Coming Soon] Download All Files in Messages
 - [Coming Soon] Textify All Channel Messages
 
 ### Installation
