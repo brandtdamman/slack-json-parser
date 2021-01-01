@@ -12,13 +12,22 @@
 */
 
 #include <fcntl.h>
+#include <pthread.h>
+#include <semaphore.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/wait.h>
 #include <unistd.h>
 
+sem_t fileLock;
+
 int main() {
+
+    sem_init(&fileLock, 0, 1);
+
+    int threadCount = 5;
+    pthread_t* threads = (pthread_t*)malloc(sizeof(pthread_t) * threadCount);
 
     return 0;
 }
