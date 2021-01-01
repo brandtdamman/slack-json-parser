@@ -1,43 +1,36 @@
-# \<PROJECT NAME\>
+# Slack JSON Parser
 ### Table of Contents
 
 - About
-- Purpose
 - Usage
 - License
 
 
-
 ## About
 
-This is where you describe what the project/repository is about.  Explain its conception, if necessary.
+The Slack JSON Parser is a multi-function parsing tool that automates various tasks for exported workspaces.  Generall, the workspace exports from Slack are difficult to parse by glancing eye and would benefit from rerepresentation or reduction of manual labour.  This project was born due to the lack of "download all attachments" option when exporting Slack workspaces.  Instead of actual files, links are given.
 
-
-
-## Purpose
-
-What is the functionality of the repository?  To what end does it serve?  Due to the increase in FOSS, many projects arguably need a purpose to exist.
-
-
+This program should work with private messages, so long as they were exported.  No official testing of this has occurred to date.
 
 ## Usage
 
-How is this to be used?
+Slack JSON Parser can be used as the following:
 
-
+- Download All Files in Messages
+- [Coming Soon] Textify All Channel Messages
 
 ### Installation
 
-How does one install this repository, if applicable?
-
-
+The program can be compiled/installed by building the C program file `main.c` to `slackjp`.
 
 ### Running
 
-Are there special procedures for running this repository, if applicable?
+Sample usage of Slack JSON Parser for downloading all attached files:
 
-
+```text
+./slackjp -d -R /path/to/root/dir
+```
 
 ## License
 
-Insert necessary legal text.
+Follows GNU Affero General Public License v3.0.  See LICENSE file for details.
