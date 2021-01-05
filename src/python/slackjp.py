@@ -15,8 +15,13 @@ import os
 # Argument Parser Setup
 _parser = argparse.ArgumentParser(description='Slack JSON Parser', epilog='Further \
     information can be found via "man slackjp".')
+_parser.add_argument('-R', '--recurse', action='store_true', help='Tells SlackJP to \
+    recursively traverse from the root directory.')
 _parser.add_argument('-D', '--filetype', type=str, nargs='+', help='Download only \
     specified filetypes.')
+_parser.add_argument('-o', '--output', type=str, nargs=1, help='Specify where the \
+    the link list will be written.')
+_parser.add_argument('directory', type=str, help='Root directory of JSON files')
 
 _parser.add_argument('--version', action='version', version='%(prog)s ' + _verNumber)
 
@@ -39,7 +44,7 @@ def find_files(RootLoc, RecurseSwitch):
     stack.append(RootLoc)
 
     # Traverse the file tree until all files have been found.
-    while len(stack) is not 0:
+    while len(stack) != 0:
         location = stack.pop()
 
         # Check if the given file path is a directory.
@@ -86,15 +91,20 @@ def download_files(LinkList, FileTypes):
         LinkList    --  list of file download links (link, file name, file type)
         FileTypes   --  dictionary of allowed file types
     """
+    #   The following method cannot be finished due to a lack of understanding
+    # Slack App API.  There will be a way to resolve this in the future; however
+    # now is not the appropriate time.
+
     #import pip._vendor.requests
     for fUrl in LinkList:
         if FileTypes.get(fUrl[2], False):
-            # Process request
+            f
             pass
 
 # Ensure this file is run directly.
 if __name__ == "__main__":
     args = _parser.parse_args()
-    fileList = find_files(os.getcwd(), True)
-    for file in fileList:
-        print(file)
+    # Prepare switch statements?
+    fileList = find_files(os.getcwd(), args.recurse)
+    linkList = scan_links(fileList)
+    download_files(linkList, args.filetype, args.output)
