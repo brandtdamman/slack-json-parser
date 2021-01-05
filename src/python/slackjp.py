@@ -60,6 +60,26 @@ def find_files(RootLoc, RecurseSwitch):
     
     return list
 
+def scan_links(FileList):
+    """Scans each file present in given file list for specific JSON variables.
+
+    Arguments:
+        FileList    --  list of files to be scanned
+
+    Returns:
+        list        --  list of file download links
+    """
+    pass
+
+def download_files(LinkList):
+    """Downloads each file from the respective link.  Changes behavior based
+    on OS as no single OS family is alike.
+
+    Arguments:
+        LinkList    --  list of file download links
+    """
+    pass
+
 # Ensure this file is run directly.
 if __name__ == "__main__":
     fileList = find_files(os.getcwd(), True)
