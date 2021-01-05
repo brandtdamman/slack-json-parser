@@ -82,6 +82,7 @@ def download_files(LinkList):
 
 # Ensure this file is run directly.
 if __name__ == "__main__":
+    args = _parser.parse_args()
     fileList = find_files(os.getcwd(), True)
     for file in fileList:
         print(file)
