@@ -3,3 +3,7 @@
 .a
 .exe
 .ebin
+
+# Python
+.pyc
+venv/

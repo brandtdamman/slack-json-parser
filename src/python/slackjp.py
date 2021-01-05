@@ -63,6 +63,13 @@ def find_files(RootLoc, RecurseSwitch):
 def scan_links(FileList):
     """Scans each file present in given file list for specific JSON variables.
 
+    There are two primary items in Slack Export JSON files:
+        - "filetype"
+        - "url_private_download"
+    Only the second variable is necessary for processing.  While it is more than
+    possible to utilize "filetype", the parsing performed makes this ultimately
+    unnecessary.
+
     Arguments:
         FileList    --  list of files to be scanned
 
@@ -71,14 +78,19 @@ def scan_links(FileList):
     """
     pass
 
-def download_files(LinkList):
+def download_files(LinkList, FileTypes):
     """Downloads each file from the respective link.  Changes behavior based
     on OS as no single OS family is alike.
 
     Arguments:
-        LinkList    --  list of file download links
+        LinkList    --  list of file download links (link, file name, file type)
+        FileTypes   --  dictionary of allowed file types
     """
-    pass
+    #import pip._vendor.requests
+    for fUrl in LinkList:
+        if FileTypes.get(fUrl[2], False):
+            # Process request
+            pass
 
 # Ensure this file is run directly.
 if __name__ == "__main__":
