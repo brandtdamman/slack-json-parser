@@ -1,13 +1,13 @@
-#   ######  ##          ###     ######  ##    ##          ##  ######   #######  ##    ##    ########     ###    ########   ######  ######## ########  
-#  ##    ## ##         ## ##   ##    ## ##   ##           ## ##    ## ##     ## ###   ##    ##     ##   ## ##   ##     ## ##    ## ##       ##     ## 
-#  ##       ##        ##   ##  ##       ##  ##            ## ##       ##     ## ####  ##    ##     ##  ##   ##  ##     ## ##       ##       ##     ## 
-#   ######  ##       ##     ## ##       #####             ##  ######  ##     ## ## ## ##    ########  ##     ## ########   ######  ######   ########  
-#        ## ##       ######### ##       ##  ##      ##    ##       ## ##     ## ##  ####    ##        ######### ##   ##         ## ##       ##   ##   
-#  ##    ## ##       ##     ## ##    ## ##   ##     ##    ## ##    ## ##     ## ##   ###    ##        ##     ## ##    ##  ##    ## ##       ##    ##  
-#   ######  ######## ##     ##  ######  ##    ##     ######   ######   #######  ##    ##    ##        ##     ## ##     ##  ######  ######## ##     ## 
+#   ######  ##          ###     ######  ##    ##           ##  ########  
+#  ##    ## ##         ## ##   ##    ## ##   ##            ##  ##     ## 
+#  ##       ##        ##   ##  ##       ##  ##             ##  ##     ## 
+#   ######  ##       ##     ## ##       #####              ##  ########  
+#        ## ##       ######### ##       ##  ##       ##    ##  ##        
+#  ##    ## ##       ##     ## ##    ## ##   ##      ##    ##  ##        
+#   ######  ######## ##     ##  ######  ##    ##      ######   ##        
 
 # Written by Brandt Damman
-_verNumber = '0.1.0'
+_verNumber = '0.1.1'
 
 import argparse
 import os
@@ -15,8 +15,8 @@ import os
 # Argument Parser Setup
 _parser = argparse.ArgumentParser(description='Slack JSON Parser', epilog='Further \
     information can be found via "man slackjp".')
-_parser.add_argument('-d', action='store_true', help='Download attached files.')
-#_parser.add_argument('-D', action='store_true', nargs='+', help='')
+_parser.add_argument('-D', '--filetype', type=str, nargs='+', help='Download only \
+    specified filetypes.')
 
 _parser.add_argument('--version', action='version', version='%(prog)s ' + _verNumber)
 
