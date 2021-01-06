@@ -175,6 +175,7 @@ def download_files(LinkList, FileTypes, OutputFile, LinkOnlySwitch):
         # If there are no specified file types, skip check.
         if FileTypes is None or FileTypes.get(fUrl[2], False):
             writer.write(fUrl[0])
+            writer.write("\n")
 
     writer.close()
 
