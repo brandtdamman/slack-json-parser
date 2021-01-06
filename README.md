@@ -8,7 +8,7 @@
 
 ## About
 
-The Slack JSON Parser is a multi-function parsing tool that automates various tasks for exported workspaces.  Generall, the workspace exports from Slack are difficult to parse by glancing eye and would benefit from rerepresentation or reduction of manual labour.  This project was born due to the lack of "download all attachments" option when exporting Slack workspaces.  Instead of actual files, links are given.
+The Slack JSON Parser is a multi-function parsing tool that automates various tasks for exported workspaces.  Generally, the workspace exports from Slack are difficult to parse by glancing eye and would benefit from rerepresentation or reduction of manual labour.  This project was born due to the lack of "download all attachments" option when exporting Slack workspaces.  Instead of actual files, links are given.
 
 This program should work with private messages, so long as they were exported.  No official testing of this has occurred to date.
 
@@ -37,8 +37,8 @@ Sample usage of Slack JSON Parser for downloading all attached files:
 ./slackjp -d -R /path/to/root/dir
 ```
 
-Several switches and functionality is readable via the TROFF page included in the respository (`docs/slackjp.1`).
+Several switches and functionality are readable via the [TROFF page](docs/slackjp.1).
 
 ## License
 
-Follows GNU Affero General Public License v3.0.  See LICENSE file for details.
+Follows GNU Affero General Public License v3.0.  See [LICENSE](LICENSE) file for details.
