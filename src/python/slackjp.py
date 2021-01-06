@@ -7,7 +7,7 @@
 #   ######  ######## ##     ##  ######  ##    ##      ######   ##        
 
 # Written by Brandt Damman
-_verNumber = '0.2.4'
+_verNumber = '0.2.5'
 
 import argparse
 import os
