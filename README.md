@@ -27,7 +27,7 @@ The program can be compiled/installed by building the C program file `src/slackj
 gcc -pthread -o slackjp slackjp.c
 ```
 
-For simplier compliation, a Makefile has been included root directory, which will also install the TROFF page.
+For simplier compliation, a Makefile has been included in root directory, which will also install the TROFF page.
 
 ### Running
 
