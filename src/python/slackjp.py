@@ -7,7 +7,7 @@
 #   ######  ######## ##     ##  ######  ##    ##      ######   ##        
 
 # Written by Brandt Damman
-_verNumber = '0.2.5'
+_verNumber = '0.2.6'
 
 import argparse
 import os
@@ -120,12 +120,9 @@ def scan_links(FileList, LinkOnlySwitch):
                 filetype = line[13:line.find('"',13)]
             elif line[:13] == '"url_private_':
                 # Found download link, store and reset.
-                if tokenIndex is None:
-                    #   Once this index is found, it no longer needs to be
-                    # calculated for the rest of the exported files.
-                    tokenIndex = line.find("?t=")
+                tokenIndex = line.find("?t=")
                 if downloadIndex is None:
-                    #   Like ?t= finding, this should only be done once.
+                    # This should only be done once.
                     downloadIndex = line.find("download\\/") + 10
 
                 # Grab the link, then the file name.
