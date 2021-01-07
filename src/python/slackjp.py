@@ -20,7 +20,7 @@ _parser.add_argument('-R', '--recurse', action='store_true', help='Tells SlackJP
     recursively traverse from the root directory.')
 _parser.add_argument('-D', '--filetype', type=str, nargs='+', help='Download only \
     specified filetypes.')
-_parser.add_argument('-o', '--output', type=str, nargs=1, help='Specify where the \
+_parser.add_argument('-o', '--output', type=str, help='Specify where the \
     the link list will be written.')
 _parser.add_argument('directory', type=str, help='Root directory of JSON files')
 
@@ -120,7 +120,7 @@ def scan_links(FileList, LinkOnlySwitch):
                 filetype = line[13:line.find('"',13)]
             elif line[:13] == '"url_private_':
                 # Found download link, store and reset.
-                tokenIndex = line.find("?t=")
+                tokenIndex = -2#line.find("?t=")
                 if downloadIndex is None:
                     # This should only be done once.
                     downloadIndex = line.find("download\\/") + 10
@@ -171,7 +171,7 @@ def download_files(LinkList, FileTypes, OutputFile, LinkOnlySwitch):
     for fUrl in LinkList:
         # If there are no specified file types, skip check.
         if FileTypes is None or FileTypes.get(fUrl[2], False):
-            writer.write(fUrl[0])
+            writer.write(fUrl[0].replace("\\", ""))
             writer.write("\n")
 
     writer.close()
