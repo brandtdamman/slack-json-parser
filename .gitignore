@@ -3,3 +3,6 @@
 .a
 .exe
 .ebin
+
+# Directories
+/out
