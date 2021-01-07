@@ -47,6 +47,7 @@ This allows for quick _git diff_ of files and easier reading.
 Embedded images or links should remain self-isolated.
 While many resources online are helpful and often necessary, summaries are more accepted.
 If an external link is required, then an [Internet Archive Wayback Machine](https://web.archive.org) link must be included as a secondary source.
+A Wayback link is waived if related to the purposes of license information or other repositories within GitHub.
 
 ## Submitting Code
 
