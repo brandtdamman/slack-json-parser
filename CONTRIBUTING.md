@@ -52,7 +52,7 @@ If an external link is required, then an [Internet Archive Wayback Machine](http
 
 ### Commit Messages
 
-- Keep the first commit line to 50 characters or less
+- Keep the first commit line to 50 characters, plus or minus 10 characters
 - Emojis are acceptable but generally not used
 
 Make sure to reference any open issue or related documents, where applicable, on following lines.
