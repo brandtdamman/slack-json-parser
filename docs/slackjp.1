@@ -1,5 +1,5 @@
 .\" Manpage for Slack JSON Parser
-.TH slackjp 1 "2021 January 02" "0.0.1" "slackjp man page"
+.TH slackjp 1 "2021 January 07" "0.2.6" "slackjp man page"
 
 
 .SH NAME
@@ -8,39 +8,36 @@ slackjp \- Slack JSON Parser for Linux
 .SH SYNOPSIS
 slackjp 
 [\fB \-h \fR] 
+[\fB \-R \fR]
+[\fB \-D \fI FILETYPE \fR[\fB FILETYPE...\fR]]
+[\fB \-o \fI OUTPUT \fR]
 [\fB \-\-version \fR]
-[\fB \-v \fR]
-[\fB \-d \fR[\fB\fI all \fR|\fI images \fR|\fI attachments \fR] |\fB \-D \fI filetype \fR]
-\fB\fIfilename\fR
-[\fB \-o \fI directory \fR]
+\fB\fIdirectory\fR
 
 .SH DESCRIPTION
-Single function JSON parser for Slack Workspace exports.
+Single (soon multi-) function JSON parser for Slack Workspace exports.
 .SH OPTIONS
 .TP
 .B \-h , \-\-help
 Opens the help/usage command menu.  Program exits after this function.
 .TP
-.B \-\-version
-Prints the version number of the exectuable.  Program exits after this function.
+.B \-R, \-\-recurse
+Tells SlackJP to recursively examine a folder and subfolders.  Necessary for inputs that
+are not a file.
 .TP
-.B \-v , \-\-verbose
-Outputs more information to the terminal: surpressable warnings, print exit status, etc.
-.TP
-.B \-d \fR[\fI all \fR|\fB\fI images \fR|\fB\fI attachments \fR]
-Program will download attachements from links within the specified file(s).  Three
-options are available: all, images, and attachments.  When specifying the download
-switch, one of these must be given.  "All" downloads all possible attachments and
-images.  "Images" only downloads attached images (not profile pictures).
-"Attachments" downloads all other non-image attachments.
-.TP
-.B \-D\fI filetype
+.B \-D\fI FILETYPE [FILETYPE...]
 Operates like \fB\-d\fR; however, a specified file type must be provided.  The given type
 will be the only file type downloaded.
 .TP
-.B \-o\fI directory
+.B \-o\fI OUTPUT
 Sets the output location for downloaded files or other operations.  If not specified, the
 current directory (./) will be used.
+.TP
+.B \-\-version
+Prints the version number of the exectuable.  Program exits after this function.
+.TP
+.B directory
+Sets the input location.  This should be the root directory of a Slack Workspace export.
 
 .SH EXIT STATUS
 .SS 0
@@ -59,4 +56,4 @@ Not all files were downloaded due to invalid file permissions.
 Not all files were downloaded due to lack of hard drive space.
 
 .SH AUTHOR
-Written by Brandt Damman (INSERT GITHUB/PROGRAMMING EMAIL)
+Written by Brandt Damman (brandt.damman@spudwilson.us)
