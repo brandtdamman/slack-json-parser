@@ -3,6 +3,11 @@
 .a
 .exe
 .ebin
+out/
 
-# Directories
-/out
+# Python
+.pyc
+venv/
+
+# Visual Studio Code
+.vscode/
