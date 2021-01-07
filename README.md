@@ -40,7 +40,7 @@ pyinstaller -F ./src/python/slackjp.py
 Presently, the C version of SlackJP is still underdevelopment and cannot function to the same capacity as the Python version.
 As such, consider its functionality to be experimental.
 
-The program can be compiled/installed by building the C program file [src/c/slackjp.c](src/slackjp.c) to `slackjp` (or desired executable name).
+The program can be compiled/installed by building the C program file [src/c/slackjp.c](src/c/slackjp.c) to `slackjp` (or desired executable name).
 Below is a sample compilation command:
 
 ```text
