@@ -3,6 +3,7 @@
 .a
 .exe
 .ebin
+out/
 
 # Python
 .pyc
