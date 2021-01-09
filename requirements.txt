@@ -1,0 +1,12 @@
+##
+#     To date, there is no present need for a specific version;
+#   however, in the event something breaks in the future, below
+#   are the original versions used:
+#
+#       PyInstaller -> 4.1
+#       requests    -> 2.25.1
+##
+
+### Required pip libraries ###
+pyinstaller
+requests
