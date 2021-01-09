@@ -120,13 +120,13 @@ def scan_links(FileList, LinkOnlySwitch):
                 filetype = line[13:line.find('"',13)]
             elif line[:13] == '"url_private_':
                 # Found download link, store and reset.
-                tokenIndex = -2#line.find("?t=")
+                tokenIndex = line.find("?t=")
                 if downloadIndex is None:
                     # This should only be done once.
                     downloadIndex = line.find("download\\/") + 10
 
                 # Grab the link, then the file name.
-                link = line[25:tokenIndex]
+                link = line[25:-2]
                 if not LinkOnlySwitch:
                     filename = line[downloadIndex:tokenIndex]
                 
