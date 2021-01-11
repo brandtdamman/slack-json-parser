@@ -7,24 +7,10 @@
 #   ######  ######## ##     ##  ######  ##    ##      ######   ##        
 
 # Written by Brandt Damman
-_verNumber = '0.2.6'
-
-import argparse
+from slackargparser import SlackJPArgs
 import os
 
-# Argument Parser Setup
-# TODO: Clean up arguments further.
-_parser = argparse.ArgumentParser(description='Slack JSON Parser', epilog='Further \
-    information can be found via "man slackjp".')
-_parser.add_argument('-R', '--recurse', action='store_true', help='Tells SlackJP to \
-    recursively traverse from the root directory.')
-_parser.add_argument('-D', '--filetype', type=str, nargs='+', help='Download only \
-    specified filetypes.')
-_parser.add_argument('-o', '--output', type=str, help='Specify where the \
-    the link list will be written.')
-_parser.add_argument('directory', type=str, help='Root directory of JSON files')
-
-_parser.add_argument('--version', action='version', version='%(prog)s ' + _verNumber)
+_parser = SlackJPArgs()
 
 def find_files(RootLoc, RecurseSwitch):
     """Compiles a list of files to compile.  If no files are found, the program will
@@ -186,7 +172,8 @@ def download_files(LinkList, FileTypes, OutputFile, LinkOnlySwitch):
 
 # Ensure this file is run directly.
 if __name__ == "__main__":
-    args = _parser.parse_args()
+    
+    args = _parser.get_args()
 
     if args.directory == ".":
         fileList = find_files(os.getcwd(), args.recurse)
