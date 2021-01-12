@@ -120,6 +120,11 @@ def scan_links(FileList, LinkOnlySwitch):
 
     return list
 
+def prompt_file():
+    """Prompts the user if an output file already exists.
+    """
+    return None
+
 def download_files(LinkList, FileTypes, OutputFile, LinkOnlySwitch):
     """Downloads each file from the respective link.  Changes behavior based
     on OS as no single OS family is alike.
@@ -128,7 +133,6 @@ def download_files(LinkList, FileTypes, OutputFile, LinkOnlySwitch):
         LinkList        --  list of file download links (link, file name, file type)
         FileTypes       --  dictionary of allowed file types
         OutputFile      --  location of output file, if applicable
-        LinkOnlySwitch  --  determines if links are the only thing grabbed
     """
     #   The following method cannot be finished due to a lack of understanding
     # Slack App API.  There will be a way to resolve this in the future; however
@@ -167,7 +171,6 @@ def download_files(LinkList, FileTypes, OutputFile, LinkOnlySwitch):
 ##
 # TODO: Add exit codes from man page
 # TODO: Clean up file and possibly split
-# TODO: Manipulate automated file download with Slack API or other
 # TODO: Centralized error handling
 
 # Ensure this file is run directly.
@@ -180,8 +183,18 @@ if __name__ == "__main__":
     else:
         fileList = find_files(args.directory, args.recurse)
 
-    # Until Slack API issues are resolved, leave second option as TRUE
-    linkList = scan_links(fileList, False)
+    linkList = scan_links(fileList, args.linkOutput is not None)
+
+    # Manage possible functions.
+    if args.linkOutput:
+        write_links(linkList, args.linkOutput)
+    elif args.downOutput:
+        download_files(linkList, args.filetype, args.downOutput, False)
+    elif args.textOutput:
+        pass
+    elif args.htmlOutput:
+        pass
+
     download_files(linkList, args.filetype, args.output, True)
 
     # Replace with error codes if necessary.

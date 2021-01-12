@@ -32,8 +32,8 @@ class SlackJPArgs:
         behavior = self._parser.add_mutually_exclusive_group(required=True)
         behavior.add_argument('-d', '--downOutput', type=str, help='Download files \
             from Slack Workspace export and save to directory.')
-        behavior.add_argument('-l', '--linkOutput', type=str, help='Find links from Slack \
-            Workspace export and save to file.')
+        behavior.add_argument('-l', '--linkOutput', type=str, help='Find attachment links \
+            from Slack Workspace export and save to file.')
         behavior.add_argument('-t', '--textOutput', type=str, help='Turns all messages in a \
             channel into a text file.')
         behavior.add_argument('-p', '--htmlOutput', type=str, help='Parses messages in a \
