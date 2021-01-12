@@ -48,6 +48,7 @@ def find_files(RootLoc, RecurseSwitch):
                 singleRecurse = False
                 for subLocation in os.listdir(location):
                     # Check for platform slashing and append directory information.
+                    # TODO: Reduce runtime by moving this out of the while loop.
                     if platform == "win32":
                         stack.append(location + '\\' + subLocation)
                     else:
@@ -78,7 +79,7 @@ def scan_links(FileList, LinkOnlySwitch):
     Returns:
         list        --  list of file download links
     """
-    list = []
+    linkList: list = []
 
     for filename in FileList:
         try:
@@ -116,9 +117,10 @@ def scan_links(FileList, LinkOnlySwitch):
                 if not LinkOnlySwitch:
                     filename = line[downloadIndex:tokenIndex]
                 
-                list.append((link, filename, filetype))
+                linkList.append((link.replace("\\", ""), filename, filetype))
 
-    return list
+    # TODO: Replace with SimpleNamespace objects, named tuples, or custom class
+    return linkList
 
 def prompt_file(ForcePrompt):
     """Prompts the user if an output file already exists.
@@ -160,43 +162,64 @@ def write_links(LinkList, FileTypes, OutputFile, ForcePrompt):
     for fUrl in LinkList:
         # If there are no specified file types, skip check.
         if FileTypes is None or FileTypes.get(fUrl[2], False):
-            writer.write(fUrl[0].replace("\\", ""))
+            writer.write(fUrl[0])
             writer.write("\n")
 
     writer.close()
 
-def download_files(LinkList, FileTypes, OutputFile, ForcePrompt):
-    """Downloads each file from the respective link.  Changes behavior based
-    on OS as no single OS family is alike.
+def download_files(LinkList, FileTypes, OutputDirectory, ForcePrompt):
+    """Downloads each file from the respective link.
 
     Arguments:
-        LinkList        --  list of file download links (link, file name, file type)
-        FileTypes       --  dictionary of allowed file types
-        OutputFile      --  location of output file, if applicable
-        ForcePrompt     --  determines if file can be overwritten, if present
+        LinkList            --  list of file download links (link, file name, file type)
+        FileTypes           --  dictionary of allowed file types
+        OutputDirectory     --  output directory for downloaded files
+        ForcePrompt         --  determines if file can be overwritten, if present
     """
-    # Select output.  If not given, use default.
-    #### COMMENTED OUT UNTIL USAGE IN ERROR LOGGING.
-    # if not OutputFile:
-    #     from datetime import datetime
-    #     OutputFile = os.getcwd() + '/slackjp-output-' + datetime.now().strftime("%d-%B-%Y-%H-%M-%S") + '.txt'
+    # Determine filesystem delimination.
+    slash = '/'
+    from sys import platform
+    if platform == "win32":
+        location = '\\'
 
-    writer = open(OutputFile, mode=prompt_file(ForcePrompt), encoding='UTF-8')
+    # Produce output log file in appropriate location.
+    from datetime import datetime
 
+    # Keep time the same for output file and folder.
+    currTime: str = datetime.now().strftime("%d-%B-%Y-%H-%M-%S")
+    outputFile: str = OutputDirectory + slash + 'slackjp-files-' + currTime + '.txt'
+    writer = open(outputFile, mode=prompt_file(ForcePrompt), encoding='UTF-8')
+
+    # Change output folder to avoid dumping all files into the same folder.
+    outputFolder: str = OutputDirectory + slash + 'slackjp-output-' + currTime
+    os.mkdir(outputFolder)
+
+    import wget
+    counter: int = 0
     for fUrl in LinkList:
         # If there are no specified file types, skip check.
         if FileTypes is None or FileTypes.get(fUrl[2], False):
-            writer.write(fUrl[0].replace("\\", ""))
-            writer.write("\n")
+            # Produce counter information.
+            # TODO: Add user prompt to use either non-descriptive file names (type only) or full name.
+            slackFileName: str = outputFolder + slash + 'slackjp-output-' + str(counter) + '.' + fUrl[1]
 
+            # Download file via wget library.
+            wget.download(fUrl[0], slackFileName)
+
+            # TODO: Remove token information.  This is a user file, not admin.
+            writer.write(f"File {fUrl[1]} ({fUrl[0]}) written to [{slackFileName}].\n")
+            counter += 1
+
+    # Tie up loose ends.
     writer.close()
 
 ##
-#   Primary TODO List
+#   Global TODO List
 ##
 # TODO: Add exit codes from man page
 # TODO: Clean up file and possibly split
 # TODO: Centralized error handling
+# TODO: Create sub-folders for downloading files (per channel)
 
 # Ensure this file is run directly.
 if __name__ == "__main__":
@@ -206,6 +229,7 @@ if __name__ == "__main__":
     # Will test soon.
     rootLocation = os.path.realpath(args.directory)
 
+    # TODO: Replace with above solution _soon_.
     if args.directory == ".":
         fileList = find_files(os.getcwd(), args.recurse)
     else:
@@ -215,9 +239,9 @@ if __name__ == "__main__":
 
     # Manage possible functions.
     if args.linkOutput:
-        write_links(linkList, args.linkOutput)
+        write_links(linkList, args,filetype, args.linkOutput, args.force)
     elif args.downOutput:
-        download_files(linkList, args.filetype, args.downOutput)
+        download_files(linkList, args.filetype, args.downOutput, args.force)
     elif args.textOutput:
         print("This feature is not yet implemented.")
     elif args.htmlOutput:

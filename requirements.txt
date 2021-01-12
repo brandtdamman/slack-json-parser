@@ -4,9 +4,9 @@
 #   are the original versions used:
 #
 #       PyInstaller -> 4.1
-#       requests    -> 2.25.1
+#       requests    -> 3.2
 ##
 
 ### Required pip libraries ###
 pyinstaller
-requests
+wget
