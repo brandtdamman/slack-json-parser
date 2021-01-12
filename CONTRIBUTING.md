@@ -15,7 +15,7 @@ When you're ready to contribute towards the project, please feel free to prepare
 
 Information about this project's [Code of Conduct](.github/CODE_OF_CONDUCT.md) can be found in the [.github](.github/) folder.
 Alternatively, a general purpose guideline can be found in [my personal repository](https://github.com/brandtdamman/brandtdamman).
-As a relative guideline prior to skimming through it, play well with others, be respectful, and fascilitate open discussion with open arms.
+As a relative guideline prior to skimming through it, play well with others, be respectful, and facilitate open discussion with open arms.
 
 ## Coding Conventions
 

@@ -120,34 +120,21 @@ def scan_links(FileList, LinkOnlySwitch):
 
     return list
 
-def prompt_file():
+def prompt_file(ForcePrompt):
     """Prompts the user if an output file already exists.
-    """
-    return None
-
-def download_files(LinkList, FileTypes, OutputFile, LinkOnlySwitch):
-    """Downloads each file from the respective link.  Changes behavior based
-    on OS as no single OS family is alike.
 
     Arguments:
-        LinkList        --  list of file download links (link, file name, file type)
-        FileTypes       --  dictionary of allowed file types
-        OutputFile      --  location of output file, if applicable
+        ForcePrompt     --  determines if logic is ultimately skipped
+
+    Returns:
+        writeFlag       --  determines how the file will be opened 
     """
-    #   The following method cannot be finished due to a lack of understanding
-    # Slack App API.  There will be a way to resolve this in the future; however
-    # now is not the appropriate time.
 
-    # Select output.  If not given, use default.
-    if not OutputFile:
-        from datetime import datetime
-        OutputFile = os.getcwd() + '/slackjp-output-' + datetime.now().strftime("%d-%B-%Y-%H-%M-%S") + '.txt'
-
-    # Prompt user if overwriting is desired.
+    # Prompt user if overwriting is desired, where applicable.
     writeFlag = 'w'
-    if os.path.isfile(OutputFile):
+    if not ForcePrompt and os.path.isfile(OutputFile):
         print(f"Do you want to override file ({OutputFile})?")
-        ans = input("[O]verwrite, [A]ppend, or [Q]uit (Default is overwrite)")
+        ans = input("[O]verwrite, [A]ppend, or [Q]uit (Default is overwrite)\t>")
         
         # Needs a better solution.
         if ans == 'a' or ans == 'A':
@@ -156,7 +143,45 @@ def download_files(LinkList, FileTypes, OutputFile, LinkOnlySwitch):
             # TODO: Exit out of program ASAP.
             return
 
-    writer = open(OutputFile, mode=writeFlag, encoding='UTF-8')
+    return writeFlag
+
+def write_links(LinkList, FileTypes, OutputFile, ForcePrompt):
+    """Each link in the given list will be written to the desired
+    output file.
+
+    Arguments:
+        LinkList        --  list of file download links (link, file name, file type)
+        FileTypes       --  dictionary of allowed file types
+        OutputFile      --  location of output file, if applicable
+        ForcePrompt     --  determines if file can be overwritten, if present
+    """
+    writer = open(OutputFile, mode=prompt_file(ForcePrompt), encoding='UTF-8')
+
+    for fUrl in LinkList:
+        # If there are no specified file types, skip check.
+        if FileTypes is None or FileTypes.get(fUrl[2], False):
+            writer.write(fUrl[0].replace("\\", ""))
+            writer.write("\n")
+
+    writer.close()
+
+def download_files(LinkList, FileTypes, OutputFile, ForcePrompt):
+    """Downloads each file from the respective link.  Changes behavior based
+    on OS as no single OS family is alike.
+
+    Arguments:
+        LinkList        --  list of file download links (link, file name, file type)
+        FileTypes       --  dictionary of allowed file types
+        OutputFile      --  location of output file, if applicable
+        ForcePrompt     --  determines if file can be overwritten, if present
+    """
+    # Select output.  If not given, use default.
+    #### COMMENTED OUT UNTIL USAGE IN ERROR LOGGING.
+    # if not OutputFile:
+    #     from datetime import datetime
+    #     OutputFile = os.getcwd() + '/slackjp-output-' + datetime.now().strftime("%d-%B-%Y-%H-%M-%S") + '.txt'
+
+    writer = open(OutputFile, mode=prompt_file(ForcePrompt), encoding='UTF-8')
 
     for fUrl in LinkList:
         # If there are no specified file types, skip check.
@@ -178,6 +203,9 @@ if __name__ == "__main__":
     
     args = _parser.get_args()
 
+    # Will test soon.
+    rootLocation = os.path.realpath(args.directory)
+
     if args.directory == ".":
         fileList = find_files(os.getcwd(), args.recurse)
     else:
@@ -189,13 +217,11 @@ if __name__ == "__main__":
     if args.linkOutput:
         write_links(linkList, args.linkOutput)
     elif args.downOutput:
-        download_files(linkList, args.filetype, args.downOutput, False)
+        download_files(linkList, args.filetype, args.downOutput)
     elif args.textOutput:
-        pass
+        print("This feature is not yet implemented.")
     elif args.htmlOutput:
-        pass
-
-    download_files(linkList, args.filetype, args.output, True)
+        print("This feature is not yet implemented.")
 
     # Replace with error codes if necessary.
     print("All operations completed.")
