@@ -229,14 +229,13 @@ if __name__ == "__main__":
 
     # Will test soon.
     rootLocation = os.path.realpath(args.directory)
-
-    # TODO: Replace with above solution _soon_.
-    if args.directory == ".":
-        fileList = find_files(os.getcwd(), args.recurse)
-    else:
-        fileList = find_files(args.directory, args.recurse)
+    fileList = find_files(rootLocation, args.recurse)
 
     linkList = scan_links(fileList, args.linkOutput is not None)
+    if len(linkList) == 0:
+        print("No links found.  SlackJP stopping.")
+        # TODO: Replace with error logging call.
+        exit()
 
     # Manage possible functions.
     if args.linkOutput:
