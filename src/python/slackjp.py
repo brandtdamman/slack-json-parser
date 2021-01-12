@@ -38,6 +38,7 @@ def find_files(RootLoc, RecurseSwitch):
         singleRecurse = True
 
     # Traverse the file tree until all files have been found.
+    # TODO: Find solution to non-recurse problem.
     while len(stack) != 0:
         location = stack.pop()
 

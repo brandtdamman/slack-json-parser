@@ -1,59 +1,72 @@
 .\" Manpage for Slack JSON Parser
-.TH slackjp 1 "2021 January 07" "0.2.6" "slackjp man page"
+.TH slackjp 1 "2021 January 12" "0.3.0" "slackjp man page"
 
 
 .SH NAME
 slackjp \- Slack JSON Parser for Linux
 
 .SH SYNOPSIS
-slackjp 
-[\fB \-h \fR] 
-[\fB \-R \fR]
-[\fB \-D \fI FILETYPE \fR[\fB FILETYPE...\fR]]
-[\fB \-o \fI OUTPUT \fR]
-[\fB \-\-version \fR]
+slackjp [\fB\-h\fR] [\fB\-R\fR] [\fB\-F\fI FILETYPE \fR[\fBFILETYPE...\fR]] [\fB\-f\fR] [\fB\-\-version\fR]
+(\fB\-d \fIDOWNOUTPUT \fR|\fB \-l \fILINKOUTPUT \fR|\fB \-t \fITEXTOUTPUT \fR|\fB \-p \fIHTMLOUTPUT\fR)
 \fB\fIdirectory\fR
 
 .SH DESCRIPTION
-Single (soon multi-) function JSON parser for Slack Workspace exports.
+Multi-function JSON parser for Slack Workspace exports.
 .SH OPTIONS
+
+.SS General
 .TP
 .B \-h , \-\-help
 Opens the help/usage command menu.  Program exits after this function.
 .TP
 .B \-R, \-\-recurse
-Tells SlackJP to recursively examine a folder and subfolders.  Necessary for inputs that
-are not a file.
+Tells SlackJP to recursively examine a folder and subfolders.
 .TP
-.B \-D\fI FILETYPE [FILETYPE...]
-Operates like \fB\-d\fR; however, a specified file type must be provided.  The given type
-will be the only file type downloaded.
+.B \-F\fI FILETYPE [FILETYPE...]
+Specifies one or more filetypes to exclusively obtain via link finding or downloading files.
+If not given, all filetypes will be downloaded or written to the link output file.
 .TP
-.B \-o\fI OUTPUT
-Sets the output location for downloaded files or other operations.  If not specified, the
-current directory (./) will be used.
+.B \-f, \-\-force
+Permits the program to use default settings for all user prompts.  This will overwrite all duplicate
+files, handle errors silently, and so forth.  Use this setting only if you know what you are doing.
 .TP
 .B \-\-version
 Prints the version number of the exectuable.  Program exits after this function.
+
+.SS Behavior
+Only one of the following options may be used per program execution.
+
+.TP
+.B \-d\fI DOWNOUTPUT\fR, \-\-downOutput\fI DOWNOUTPUT
+Sets the download flag.  This will download all files found in messages within the given
+directory.  An output directory must be given as to allow SlackJP to have a centralized
+location to put the resulting files.
+.TP
+.B \-l\fI LINKOUTPUT\fR, \-\-linkOutput\fI  LINKOUTPUT
+Sets the link flag.  This will find all links in the message directory.  Whether this links
+are downloads or other, they will be written to the specified output file.
+.TP
+.B \-t\fI TEXTOUTPUT\fR, \-\-textOutput\fI  TEXTOUTPUT
+NOT YET IMPLEMENTED
+
+Sets the text flag.  All messages traversed will be converted into respective text files,
+seperated by days and channels.  A proper Slack Workspace export is required for this function.
+An output directory must also be given to create a sub-structure for textified files.
+.TP
+.B \-p\fI HTMLOUTPUT\fR, \-\-htmlOutput\fI HTMLOUTPUT 
+NOT YET IMPLEMENTED
+
+Sets the HTML flag.  Similar to TEXTOUTPUT, this will parse through all messages and produce
+a human-readable format; however, this will be done in HTML.  Profile pictures will be obtained
+where possible, names appropriate associated, and further information created.  An output directory
+must be given to create the self-hostable HTML and CSS files.  Configuration of this output can be
+manipulated in a configuration file placed in the same directory as SlackJP.
+
+.SS Required
 .TP
 .B directory
-Sets the input location.  This should be the root directory of a Slack Workspace export.
-
-.SH EXIT STATUS
-.SS 0
-Program exited appropriately and all tasks finished succesfully.
-.SS 100-Series
-This exclusively deals with file downloading.  All files unable to be downloaded will be
-listed in an error log (err.log) alongside the return code.
-.TP
-.B 101
-Not all files were downloaded due to broken links.
-.TP
-.B 102
-Not all files were downloaded due to invalid file permissions.
-.TP
-.B 103
-Not all files were downloaded due to lack of hard drive space.
+Sets the input location.  This should be the root directory of a Slack Workspace export for
+typical behavior.
 
 .SH AUTHOR
 Written by Brandt Damman (brandt.damman@spudwilson.us)
