@@ -77,7 +77,7 @@ def scan_links(FileList, LinkOnlySwitch):
         LinkOnlySwitch  --  determines if links are the only thing grabbed
 
     Returns:
-        list        --  list of file download links
+        list            --  list of file download links
     """
     linkList: list = []
 

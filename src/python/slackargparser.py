@@ -1,7 +1,7 @@
 import argparse
 
 # Written by Brandt Damman
-_verNumber = '0.2.6'
+_verNumber = '0.3.0'
 
 class SlackJPArgs:
     """Defines the CLI argument parser for SlackJP.
