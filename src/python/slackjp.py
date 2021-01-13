@@ -239,6 +239,7 @@ def download_files(LinkList, FileTypes, OutputDirectory, ForcePrompt):
 # TODO: Centralized error handling
 # TODO: Create sub-folders for downloading files (per channel)
 # TODO: Catalog channel information in-advance.
+# TODO: Make a configuration file for all the magic numbers presently used.
 
 # Ensure this file is run directly.
 if __name__ == "__main__":
