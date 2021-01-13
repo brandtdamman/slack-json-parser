@@ -12,7 +12,7 @@ import os
 
 _parser = SlackJPArgs()
 
-def find_files(RootLoc, RecurseSwitch):
+def find_files(RootLoc: str, RecurseSwitch) -> list:
     """Compiles a list of files to compile.  If no files are found, the program will
     exit.  Does not begin grabbing links from each file yet for exit behavior reasons.
     
@@ -21,9 +21,9 @@ def find_files(RootLoc, RecurseSwitch):
         RecurseSwitch   --  denotes if the directories should be traversed
 
     Returns:
-        list            --  list of file paths
+        fileList        --  list of file paths
     """
-    list = []
+    fileList: list = []
 
     from collections import deque
     from sys import platform
@@ -31,7 +31,7 @@ def find_files(RootLoc, RecurseSwitch):
     stack.append(RootLoc)
 
     # See if-statement.
-    singleRecurse = False
+    singleRecurse: bool = False
 
     # If primary location is a directory, one "recurse" is needed.
     if os.path.isdir(os.path.dirname(RootLoc)) and not os.path.isfile(RootLoc):
@@ -55,14 +55,15 @@ def find_files(RootLoc, RecurseSwitch):
                         stack.append(location + '/' + subLocation)
         # Location is not a directory so see if it matches .json filetype.
         elif location[-5:] == '.json':
-            list.append(location)
-        # Invalid filetype, place INFO or WARNING in log.
+            fileList.append(location)
         else:
-            pass # TODO: Impelement error logging.
+            # Invalid filetype, place INFO or WARNING in log.
+            # TODO: Impelement error logging for invalid filetype
+            pass 
     
-    return list
+    return fileList
 
-def scan_links(FileList, LinkOnlySwitch):
+def scan_links(FileList: list, LinkOnlySwitch) -> None:
     """Scans each file present in given file list for specific JSON variables.
 
     There are two primary items in Slack Export JSON files:
@@ -77,7 +78,7 @@ def scan_links(FileList, LinkOnlySwitch):
         LinkOnlySwitch  --  determines if links are the only thing grabbed
 
     Returns:
-        list            --  list of file download links
+        linkList            --  list of file download links
     """
     linkList: list = []
 
@@ -92,11 +93,11 @@ def scan_links(FileList, LinkOnlySwitch):
             print(f"File {filename} was unable to be opened.")
 
         # File Object -> Link, File Name, & File Type
-        tokenIndex = None
-        downloadIndex = None
-        link = None
-        filetype = None
-        filename = None
+        tokenIndex: int = None
+        downloadIndex: int = None
+        link: str = None
+        filetype: str = None
+        filename: str = None
 
         # TODO: Remove these god-awful magic numbers.
         # Now read from file.
@@ -122,7 +123,7 @@ def scan_links(FileList, LinkOnlySwitch):
     # TODO: Replace with SimpleNamespace objects, named tuples, or custom class
     return linkList
 
-def prompt_file(ForcePrompt):
+def prompt_file(ForcePrompt: bool) -> None:
     """Prompts the user if an output file already exists.
 
     Arguments:
@@ -143,11 +144,12 @@ def prompt_file(ForcePrompt):
             writeFlag = 'a'
         elif ans == 'Q' or ans == 'q':
             # TODO: Exit out of program ASAP.
+            # ERROR LEVEL
             return
 
     return writeFlag
 
-def write_links(LinkList, FileTypes, OutputFile, ForcePrompt):
+def write_links(LinkList: list, FileTypes: list, OutputFile: str, ForcePrompt: bool) -> None:
     """Each link in the given list will be written to the desired
     output file.
 
@@ -157,6 +159,7 @@ def write_links(LinkList, FileTypes, OutputFile, ForcePrompt):
         OutputFile      --  location of output file, if applicable
         ForcePrompt     --  determines if file can be overwritten, if present
     """
+    # Open file and check if it already exists.
     writer = open(OutputFile, mode=prompt_file(ForcePrompt), encoding='UTF-8')
 
     for fUrl in LinkList:
@@ -165,9 +168,10 @@ def write_links(LinkList, FileTypes, OutputFile, ForcePrompt):
             writer.write(fUrl[0])
             writer.write("\n")
 
+    # Close resource
     writer.close()
 
-def download_files(LinkList, FileTypes, OutputDirectory, ForcePrompt):
+def download_files(LinkList: list, FileTypes: list, OutputDirectory: str, ForcePrompt: bool) -> None:
     """Downloads each file from the respective link.
 
     Arguments:
@@ -250,11 +254,11 @@ if __name__ == "__main__":
     args = _parser.get_args()
 
     # Will test soon.
-    rootLocation = os.path.realpath(args.directory)
-    fileList = find_files(rootLocation, args.recurse)
+    rootLocation: str = os.path.realpath(args.directory)
+    fileList: list = find_files(rootLocation, args.recurse)
 
     # TODO: Modify link scan to handle differnt styles of link scanning.
-    linkList = scan_links(fileList, args.linkOutput is not None)
+    linkList: list = scan_links(fileList, args.linkOutput is not None)
     if len(linkList) == 0:
         print("No links found.  SlackJP stopping.")
         # TODO: Replace with error logging call.
