@@ -38,7 +38,6 @@ def find_files(RootLoc, RecurseSwitch):
         singleRecurse = True
 
     # Traverse the file tree until all files have been found.
-    # TODO: Find solution to non-recurse problem.
     while len(stack) != 0:
         location = stack.pop()
 
@@ -181,7 +180,7 @@ def download_files(LinkList, FileTypes, OutputDirectory, ForcePrompt):
     slash = '/'
     from sys import platform
     if platform == "win32":
-        location = '\\'
+        slash = '\\'
 
     # Produce output log file in appropriate location.
     from datetime import datetime
@@ -193,7 +192,24 @@ def download_files(LinkList, FileTypes, OutputDirectory, ForcePrompt):
 
     # Change output folder to avoid dumping all files into the same folder.
     outputFolder: str = OutputDirectory + slash + 'slackjp-output-' + currTime
-    os.mkdir(outputFolder)
+
+    # Never silence errors.
+    try:
+        os.mkdir(outputFolder)
+    except FileNotFoundError as e:
+        # Directory is not reachable or does not exist, attempt recursive mkdir.
+        print("Directory does not exist.\n")
+        ans = input("Do you want to [M]ake the directory or [A]bort? (Default is make)\t>")
+
+        # Handle response
+        if ans == 'A' or ans == 'a':
+            print("Aborting...\n")
+            writer.close()
+            exit()
+        else:
+            # Make an effort of attempting something else.
+            # TODO: If this fails, then I don't know what to do yet.
+            os.makedirs(outputFolder)
 
     import wget
     counter: int = 0
@@ -205,6 +221,7 @@ def download_files(LinkList, FileTypes, OutputDirectory, ForcePrompt):
             slackFileName: str = outputFolder + slash + 'slackjp-output-' + str(counter) + '.' + fUrl[1]
 
             # Download file via wget library.
+            # TODO: Account for file permissions.  Check WELL in-advance.
             wget.download(fUrl[0], slackFileName)
 
             # TODO: Remove token information.  This is a user file, not admin.
@@ -221,6 +238,7 @@ def download_files(LinkList, FileTypes, OutputDirectory, ForcePrompt):
 # TODO: Clean up file and possibly split
 # TODO: Centralized error handling
 # TODO: Create sub-folders for downloading files (per channel)
+# TODO: Catalog channel information in-advance.
 
 # Ensure this file is run directly.
 if __name__ == "__main__":
