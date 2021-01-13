@@ -231,6 +231,9 @@ def download_files(LinkList, FileTypes, OutputDirectory, ForcePrompt):
     # Tie up loose ends.
     writer.close()
 
+    # wget doesn't like cleaning up its output, for reasons unknown.
+    print('\n')
+
 ##
 #   Global TODO List
 ##
@@ -250,6 +253,7 @@ if __name__ == "__main__":
     rootLocation = os.path.realpath(args.directory)
     fileList = find_files(rootLocation, args.recurse)
 
+    # TODO: Modify link scan to handle differnt styles of link scanning.
     linkList = scan_links(fileList, args.linkOutput is not None)
     if len(linkList) == 0:
         print("No links found.  SlackJP stopping.")
