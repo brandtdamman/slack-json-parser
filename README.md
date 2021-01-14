@@ -21,6 +21,7 @@ Slack JSON Parser can be used as the following:
 
 - Download all files
 - Download specific files by filetypes
+- [Partially Implemented] Write all links to file
 - [Coming Soon] Export JSON to text files
 - [Coming Soon] Export JSON to HTML
 
