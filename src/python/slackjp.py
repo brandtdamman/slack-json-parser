@@ -103,7 +103,7 @@ def scan_links(FileList: list, LinkOnlySwitch) -> None:
         # Now read from file.
         for line in reader:
             line = line.strip()
-            if line[:6] == '"filet' and not LinkOnlySwitch:
+            if not LinkOnlySwitch and line[:6] == '"filet':
                 # Found file type, now store.
                 filetype = line[13:line.find('"',13)]
             elif line[:13] == '"url_private_':
