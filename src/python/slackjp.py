@@ -8,8 +8,11 @@
 
 # Written by Brandt Damman
 from slackargparser import SlackJPArgs
-import os
 
+import os
+from collections import namedtuple
+
+FileInformation = namedtuple('FileInformation', ['name', 'type', 'link', 'folder'])
 _parser = SlackJPArgs()
 
 def find_files(RootLoc: str, RecurseSwitch) -> list:
@@ -30,11 +33,12 @@ def find_files(RootLoc: str, RecurseSwitch) -> list:
     stack = deque()
     stack.append(RootLoc)
 
+    counter: int = 1
     # See if-statement.
     singleRecurse: bool = False
 
     # If primary location is a directory, one "recurse" is needed.
-    if os.path.isdir(os.path.dirname(RootLoc)) and not os.path.isfile(RootLoc):
+    if is_directory(RootLoc):
         singleRecurse = True
 
     # Traverse the file tree until all files have been found.
@@ -42,7 +46,7 @@ def find_files(RootLoc: str, RecurseSwitch) -> list:
         location = stack.pop()
 
         # Check if the given file path is a directory.
-        if os.path.isdir(os.path.dirname(location)) and not os.path.isfile(location):
+        if is_directory(location):
             if RecurseSwitch or singleRecurse:
                 # TODO: Find simple solution to fix assigning False every iteration.
                 singleRecurse = False
@@ -56,14 +60,28 @@ def find_files(RootLoc: str, RecurseSwitch) -> list:
         # Location is not a directory so see if it matches .json filetype.
         elif location[-5:] == '.json':
             fileList.append(location)
+            print(f"Files found\t-----\t{counter}", end='\r', flush=True)
+            counter += 1
         else:
             # Invalid filetype, place INFO or WARNING in log.
             # TODO: Impelement error logging for invalid filetype
             pass 
     
+    print('\n', end='')
     return fileList
 
-def scan_links(FileList: list, LinkOnlySwitch) -> None:
+def is_directory(Location: str) -> bool:
+    """Performs a check to see if the given file location is a directory and NOT file.
+
+    Arguments:
+        Location        --  file location in string format
+
+    Returns:
+        true if location is a directory, otherwise false
+    """
+    return os.path.isdir(os.path.dirname(Location)) and not os.path.isfile(Location) 
+
+def scan_links(FileList: list, LocationIndex: int, LinkOnlySwitch) -> (list, dict):
     """Scans each file present in given file list for specific JSON variables.
 
     There are two primary items in Slack Export JSON files:
@@ -74,39 +92,57 @@ def scan_links(FileList: list, LinkOnlySwitch) -> None:
     unnecessary.
 
     Arguments:
-        FileList        --  list of files to be scanned
-        LinkOnlySwitch  --  determines if links are the only thing grabbed
+        FileList            --  list of files to be scanned
+        LocationIndex       --  index where folder information becomes important
+        LinkOnlySwitch      --  determines if links are the only thing grabbed
 
     Returns:
         linkList            --  list of file download links
+        folderMap           --  dictionary of all folders
     """
+    global FileInformation
     linkList: list = []
+    folderMap: dict = {} # str: bool
 
-    for filename in FileList:
+    fileCount: int = len(FileList)
+    fileCounter: int = 0
+
+    for name in FileList:
         try:
-            file = open(filename, mode='r+', encoding='UTF-8')
+            file = open(name, mode='r+', encoding='UTF-8')
             reader = file.readlines()
             file.close()
         except Exception:
             # TODO: Change exception type.
             # TODO: Use centralized error logging.
-            print(f"File {filename} was unable to be opened.")
+            print(f"File {name} was unable to be opened.")
+            continue
 
-        # File Object -> Link, File Name, & File Type
         tokenIndex: int = None
         downloadIndex: int = None
         link: str = None
         filetype: str = None
         filename: str = None
+        folder: str = None
+
+        # This is used to avoid doing string comparisons every if-statment.
+        # PRESUMABLY, this will safe time spent scaning for links.
+        operationCounter: int = 0
+
+        #print(f"Files found\t{counter}", end='\r', flush=True)
 
         # TODO: Remove these god-awful magic numbers.
         # Now read from file.
         for line in reader:
             line = line.strip()
-            if not LinkOnlySwitch and line[:6] == '"filet':
+            if operationCounter == 0 and line[:4] == '"id"':
+                filename = line[7:-2]
+                operationCounter = 1
+            elif operationCounter == 1 and line[:6] == '"filet':
                 # Found file type, now store.
                 filetype = line[13:line.find('"',13)]
-            elif line[:13] == '"url_private_':
+                operationCounter = 2
+            elif operationCounter == 2 and line[:13] == '"url_private_':
                 # Found download link, store and reset.
                 tokenIndex = line.find("?t=")
                 if downloadIndex is None:
@@ -115,13 +151,22 @@ def scan_links(FileList: list, LinkOnlySwitch) -> None:
 
                 # Grab the link, then the file name.
                 link = line[25:-2]
-                if not LinkOnlySwitch:
-                    filename = line[downloadIndex:tokenIndex]
-                
-                linkList.append((link.replace("\\", ""), filename, filetype))
+                filename += '-' + line[downloadIndex:tokenIndex]
+
+                folder = name[LocationIndex:-5]
+                if not folderMap.get(folder, False):
+                    folderMap[folder] = True
+
+                # FileInformation -> name, type, link, folder
+                linkList.append(FileInformation(filename, filetype, link.replace("\\", ""), folder))
+                operationCounter = 0
+                print(f"Files Processed\t-----\t{fileCounter}/{fileCount}", end='\r', flush=True)
+
+        fileCounter += 1
 
     # TODO: Replace with SimpleNamespace objects, named tuples, or custom class
-    return linkList
+    print('\n', end='')
+    return linkList, folderMap
 
 def prompt_file(ForcePrompt: bool) -> None:
     """Prompts the user if an output file already exists.
@@ -171,11 +216,12 @@ def write_links(LinkList: list, FileTypes: list, OutputFile: str, ForcePrompt: b
     # Close resource
     writer.close()
 
-def download_files(LinkList: list, FileTypes: list, OutputDirectory: str, ForcePrompt: bool) -> None:
-    """Downloads each file from the respective link.
+def download_files(LinkList: list, FolderMap:dict, FileTypes: list, OutputDirectory: str, ForcePrompt: bool) -> None:
+    """Downloads each file from their respective link.
 
     Arguments:
-        LinkList            --  list of file download links (link, file name, file type)
+        LinkList            --  list of file download links (name, type, link, folder)
+        FolderMap           --  dictionary of folders
         FileTypes           --  dictionary of allowed file types
         OutputDirectory     --  output directory for downloaded files
         ForcePrompt         --  determines if file can be overwritten, if present
@@ -192,7 +238,7 @@ def download_files(LinkList: list, FileTypes: list, OutputDirectory: str, ForceP
     # Keep time the same for output file and folder.
     currTime: str = datetime.now().strftime("%d-%B-%Y-%H-%M-%S")
     outputFile: str = OutputDirectory + slash + 'slackjp-files-' + currTime + '.txt'
-    writer = open(outputFile, mode=prompt_file(ForcePrompt), encoding='UTF-8')
+    # writer = open(outputFile, mode=prompt_file(ForcePrompt), encoding='UTF-8')
 
     # Change output folder to avoid dumping all files into the same folder.
     outputFolder: str = OutputDirectory + slash + 'slackjp-output-' + currTime
@@ -208,29 +254,39 @@ def download_files(LinkList: list, FileTypes: list, OutputDirectory: str, ForceP
         # Handle response
         if ans == 'A' or ans == 'a':
             print("Aborting...\n")
-            writer.close()
+            # writer.close()
             exit()
         else:
             # Make an effort of attempting something else.
             # TODO: If this fails, then I don't know what to do yet.
             os.makedirs(outputFolder)
 
+    # For all necessary folders, _create them_!
+    print("Creating export folders...")
+    for folder in FolderMap.keys():
+        try:
+            os.makedirs(outputFolder + folder)
+        except FileNotFoundError as e:
+            print("Failure when making folders for downloading.  Aborting...")
+            exit()
+
     import wget
-    counter: int = 0
-    for fUrl in LinkList:
+    # counter: int = 0
+    print("Downloading files...")
+    for fileInfo in LinkList:
         # If there are no specified file types, skip check.
-        if FileTypes is None or FileTypes.get(fUrl[2], False):
+        if FileTypes is None or FileTypes.get(fileInfo.type, False):
             # Produce counter information.
             # TODO: Add user prompt to use either non-descriptive file names (type only) or full name.
-            slackFileName: str = outputFolder + slash + 'slackjp-output-' + str(counter) + '.' + fUrl[1]
+            slackFileName: str = outputFolder + slash + fileInfo.folder + slash + fileInfo.name
 
             # Download file via wget library.
             # TODO: Account for file permissions.  Check WELL in-advance.
-            wget.download(fUrl[0], slackFileName)
+            wget.download(fileInfo.link, slackFileName)
 
             # TODO: Remove token information.  This is a user file, not admin.
-            writer.write(f"File {fUrl[1]} ({fUrl[0]}) written to [{slackFileName}].\n")
-            counter += 1
+            # writer.write(f"File {fUrl[1]} ({fUrl[0]}) written to [{slackFileName}].\n")
+            # counter += 1
 
     # Tie up loose ends.
     writer.close()
@@ -258,7 +314,8 @@ if __name__ == "__main__":
     fileList: list = find_files(rootLocation, args.recurse)
 
     # TODO: Modify link scan to handle differnt styles of link scanning.
-    linkList: list = scan_links(fileList, args.linkOutput is not None)
+    # TODO: Change style to avoid unnecessary work with Link Scanning.
+    linkList, folderMap = scan_links(fileList, len(rootLocation), args.linkOutput is not None)
     if len(linkList) == 0:
         print("No links found.  SlackJP stopping.")
         # TODO: Replace with error logging call.
@@ -266,9 +323,10 @@ if __name__ == "__main__":
 
     # Manage possible functions.
     if args.linkOutput:
-        write_links(linkList, args,filetype, args.linkOutput, args.force)
+        print("This feature is currently broken.")
+        # write_links(linkList, args,filetype, args.linkOutput, args.force)
     elif args.downOutput:
-        download_files(linkList, args.filetype, args.downOutput, args.force)
+        download_files(linkList, folderMap, args.filetype, args.downOutput, args.force)
     elif args.textOutput:
         print("This feature is not yet implemented.")
     elif args.htmlOutput:
