@@ -14,4 +14,4 @@ jobs:
         with:
           project: Documentation
           column: WIP
-          repo-token: ${{ secrets.ACTIONABLE }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
