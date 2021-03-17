@@ -1,0 +1,17 @@
+name: Move new documentation issues into doc project
+
+on:
+  pull_request:
+    types: [assigned]
+  branches:
+    - doc/changes
+
+jobs:
+  automate-project-columns:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: alex-page/github-project-automation-plus@v0.3.0
+        with:
+          project: Documentation
+          column: WIP
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
