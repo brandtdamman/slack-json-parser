@@ -3,8 +3,8 @@ name: Move new documentation issues into doc project
 on:
   pull_request:
     types: [assigned]
-  branches:
-    - doc/changes
+    branches:
+      - doc/changes
 
 jobs:
   automate-project-columns:
