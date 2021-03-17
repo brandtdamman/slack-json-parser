@@ -1,4 +1,4 @@
-name: Move new documentation issues into doc project
+name: Documentation_PR
 
 on:
   pull_request:
