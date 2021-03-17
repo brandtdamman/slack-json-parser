@@ -11,7 +11,6 @@
 The Slack JSON Parser (commonly shortened to SlackJP) is a multi-function parsing tool born from the lack of "download all attachments" option when exporting Slack workspaces.
 Generally, the workspace exports from Slack are difficult to parse by glancing eye.
 Additinoally, various bookkeeping tasks for exported workspaces, such as conversion to non-JSON format, downloading (specific) files, and so forth are non-trival tasks.
-By incorporating 
 
 This program should work with private messages, so long as they were exported.  No official testing of this has occurred to date.
 
@@ -21,6 +20,7 @@ Slack JSON Parser can be used as the following:
 
 - Download all files
 - Download specific files by filetypes
+- [Partially Implemented] Write all links to file
 - [Coming Soon] Export JSON to text files
 - [Coming Soon] Export JSON to HTML
 
@@ -37,10 +37,10 @@ pyinstaller -F ./src/python/slackjp.py
 
 #### C
 
-Presently, the C version of SlackJP is still underdevelopment and cannot function to the same capacity as the Python version.
+Presently, the C version of SlackJP is still under development and cannot function to the same capacity as the Python version.
 As such, consider its functionality to be experimental.
 
-The program can be compiled/installed by building the C program file [src/c/slackjp.c](src/slackjp.c) to `slackjp` (or desired executable name).
+The program can be compiled/installed by building the C program file [src/c/slackjp.c](src/c/slackjp.c) to `slackjp` (or desired executable name).
 Below is a sample compilation command:
 
 ```text

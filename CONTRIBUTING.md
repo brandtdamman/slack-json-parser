@@ -15,7 +15,7 @@ When you're ready to contribute towards the project, please feel free to prepare
 
 Information about this project's [Code of Conduct](.github/CODE_OF_CONDUCT.md) can be found in the [.github](.github/) folder.
 Alternatively, a general purpose guideline can be found in [my personal repository](https://github.com/brandtdamman/brandtdamman).
-As a relative guideline prior to skimming through it, play well with others, be respectful, and fascilitate open discussion with open arms.
+As a relative guideline prior to skimming through it, play well with others, be respectful, and facilitate open discussion with open arms.
 
 ## Coding Conventions
 
@@ -47,6 +47,7 @@ This allows for quick _git diff_ of files and easier reading.
 Embedded images or links should remain self-isolated.
 While many resources online are helpful and often necessary, summaries are more accepted.
 If an external link is required, then an [Internet Archive Wayback Machine](https://web.archive.org) link must be included as a secondary source.
+A Wayback link is waived if related to the purposes of license information or other repositories within GitHub.
 
 ## Submitting Code
 
