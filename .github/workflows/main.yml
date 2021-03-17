@@ -34,11 +34,3 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
-  project:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: GitHub Project Automation+
-        uses: alex-page/github-project-automation-plus@v0.5.1
-
-  
