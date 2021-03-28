@@ -69,6 +69,7 @@ def scan_links(FileList: list, LinkOnlySwitch) -> None:
     There are two primary items in Slack Export JSON files:
         - "filetype"
         - "url_private_download"
+
     Only the second variable is necessary for processing.  While it is more than
     possible to utilize "filetype", the parsing performed makes this ultimately
     unnecessary.
