@@ -154,11 +154,10 @@ def write_links(LinkList: list, FileTypes: list, OutputFile: str, ForcePrompt: b
     """Each link in the given list will be written to the desired
     output file.
 
-    Arguments:
-        LinkList        --  list of file download links (link, file name, file type)
-        FileTypes       --  dictionary of allowed file types
-        OutputFile      --  location of output file, if applicable
-        ForcePrompt     --  determines if file can be overwritten, if present
+    :param LinkList: list of file download links (link, file name, file type)
+    :param FileTypes: dictionary of allowed file types
+    :param OutputFile: location of output file, if applicable
+    :param ForcePrompt: determines if file can be overwritten, if present
     """
     # Open file and check if it already exists.
     writer = open(OutputFile, mode=prompt_file(ForcePrompt), encoding='UTF-8')
@@ -175,12 +174,12 @@ def write_links(LinkList: list, FileTypes: list, OutputFile: str, ForcePrompt: b
 def download_files(LinkList: list, FileTypes: list, OutputDirectory: str, ForcePrompt: bool) -> None:
     """Downloads each file from the respective link.
 
-    Arguments:
-        LinkList            --  list of file download links (link, file name, file type)
-        FileTypes           --  dictionary of allowed file types
-        OutputDirectory     --  output directory for downloaded files
-        ForcePrompt         --  determines if file can be overwritten, if present
+    :param LinkList: list of file download links (link, file name, file type)
+    :param FileTypes: dictionary of allowed file types
+    :param OutputFile: location of output file, if applicable
+    :param ForcePrompt: determines if file can be overwritten, if present
     """
+
     # Determine filesystem delimination.
     slash = '/'
     from sys import platform
