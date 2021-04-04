@@ -15,13 +15,11 @@ _parser = SlackJPArgs()
 def find_files(RootLoc: str, RecurseSwitch) -> list:
     """Compiles a list of files to compile.  If no files are found, the program will
     exit.  Does not begin grabbing links from each file yet for exit behavior reasons.
-    
-    Arguments:
-        RootLoc         --  the directory or file in which to begin scanning
-        RecurseSwitch   --  denotes if the directories should be traversed
 
-    Returns:
-        fileList        --  list of file paths
+    :param RootLoc: the directory or file in which to begin scanning
+    :param RescueSwitch: denotes if the directories should be traversed
+
+    :returns: list of file paths
     """
     fileList: list = []
 
@@ -74,12 +72,10 @@ def scan_links(FileList: list, LinkOnlySwitch) -> None:
     possible to utilize "filetype", the parsing performed makes this ultimately
     unnecessary.
 
-    Arguments:
-        FileList        --  list of files to be scanned
-        LinkOnlySwitch  --  determines if links are the only thing grabbed
+        :param FileList: list of files to be scanned
+        :param LinkOnlySwitch: determines if links are the only thing grabbed
 
-    Returns:
-        linkList            --  list of file download links
+        :returns: list of file download links
     """
     linkList: list = []
 
@@ -126,12 +122,9 @@ def scan_links(FileList: list, LinkOnlySwitch) -> None:
 
 def prompt_file(ForcePrompt: bool) -> None:
     """Prompts the user if an output file already exists.
+    :params ForcePrompt: determines if logic is ultimately skipped
 
-    Arguments:
-        ForcePrompt     --  determines if logic is ultimately skipped
-
-    Returns:
-        writeFlag       --  determines how the file will be opened 
+    :returns writeFlag: determines how the file will be opened
     """
 
     # Prompt user if overwriting is desired, where applicable.
